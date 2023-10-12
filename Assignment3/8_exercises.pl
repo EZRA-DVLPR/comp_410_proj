@@ -72,3 +72,6 @@ prereq(CourseA, CourseB) :-
 prereq(CourseA, CourseB) :-
     directPrereq(CourseA, CourseC),
     prereq(CourseC, CourseB).
+
+%QUERY: prereq(comp410, comp110).
+%ANSWER: true.
