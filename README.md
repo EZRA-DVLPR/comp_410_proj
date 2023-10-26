@@ -18,6 +18,14 @@ A collection of Exercises to get more familiar with Prolog. Specifically with ru
 
 A collection of Exercises to get more familiar with Prolog. Specifically with recursion and structures. Files are in Prolog.
 
+## Assignment 4:
+
+...
+
+## Assignment 5:
+
+...
+
 ## Game:
 
 A Collection of a couple Prolog files to represent the game. The source file found from the website listed above. 
