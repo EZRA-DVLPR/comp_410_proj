@@ -13,6 +13,7 @@
 %
 % Code expectation: 1 line
 
+myFirst([H|_], H).
 
 % 2. TODO: Write a procedure named myLast that takes:
 %    1.) A list
@@ -27,6 +28,9 @@
 %
 % Code expectation: ~3 lines
 
+myLast([T], T).
+myLast([_|T], Tail) :-
+    myLast(T, Tail).
 
 % 3. TODO: Write a procedure named myInit that takes:
 %    1.) A list
@@ -42,6 +46,9 @@
 %
 % Code expectation: ~3 lines
 
+myInit([_], []).
+myInit([H|T], [H|Result]) :-
+    myInit(T, Result).
 
 % 4. TODO: Write a procedure named myAppend that takes:
 %    1.) A list
@@ -68,7 +75,9 @@
 % third query above to get all the solutions.
 % Code expectation: ~3 lines
 
-
+myAppend([], List2, List2).
+myAppend([H|T], List2, [H|AppendList]) :-
+    myAppend(T, List2, AppendList).
 
 % 5. TODO: Write a procedure named myLength that takes:
 %    1.) A list
@@ -86,7 +95,10 @@
 %
 % Code expectation: ~4 lines
 
-
+myLength([], 0).
+myLength([_|T], Length) :-
+    myLength(T, NewLength),
+    Length is NewLength + 1.
 
 % 6. TODO: Write a procedure named myFlatten that takes:
 %    1.) A possibly nested list
@@ -112,7 +124,7 @@
 %
 % Code expectation: ~12 lines
 
-
+myFlatten([], []).
 
 % 7. TODO: Write a procedure named insertPosition that
 %    takes:

@@ -7,6 +7,25 @@ you do not need to complete this for full credit.
     no lists are used in the Prolog-based SAT solver.
     How is this solver able to avoid using lists?
 
+Instead of keeping track of the entire structure of the given Expression,
+what we implemented was a recursive way to break down the expression down
+into 2(3) cases: A literal, or a binary expression being `or` or `and`.
+
+Recursively, we break down the given expression into the LHS and RHS
+of the binary expressions(`or`, `and`) which reduces the complexity of
+structure given in the recursive call. Eventually, this breaking apart must
+lead into a case where there is a literal. When a literal is encountered,
+a value is returned, true or false, which returns to the parent
+recursive call. This evaluation trickles upwards until a binary operator,
+which will decide if it needs to evaluate the other side or not. This 
+binary operator returns a true/false value based on the constituent parts.
+This unwinding process repeats until there are no more recursive calls,
+yielding an answer to the initial given expression without the need for lists.
+
+TL;DR
+Recursively break down the expression into smaller expressions and evaluate
+them. Once unable to break it down further, return the values alleviating
+the recursive stack.
 
 
 
@@ -16,6 +35,13 @@ you do not need to complete this for full credit.
     Prolog-based SAT solver.  How is this solver able
     to avoid using hash tables / maps?
 
+This SAT Solver was able to use the fact that Prolog returns true/false values
+based on given queries, rules, etc. Instead of mapping a literal to a boolean
+value, we defined the literal to have arity 2, with the first parameter
+indicating the label, and the second parameter to indicate the 
+positive/negative sign associated with the literal. When the literal is checked
+against the defined rule, it either unifies and returns true, or fails to unify
+indicating a false.
 
 
 
@@ -29,56 +55,11 @@ you do not need to complete this for full credit.
     (As a hint, this question is connected to the
     previous question.)
 
-
-
-
-Step-by-Step Instructions
----------------------------
-Step 1: Implement a Boolean Expression Evaluator in Prolog
-Download boolean_evaluator.pl. 
-You will need to implement a recursive evaluator of Boolean expressions in 
-this file, much like the evaluator you implemented for Assignment 1. 
-This will be implemented via a procedure 
-(that is, a combination of facts and rules which have the same name) named eval. 
-Note that the representation of the AST has been slightly changed, 
-corresponding to a more idiomatic Prolog representation. 
-The comments in the file provide more details.
-
-Step 2: Implement a SAT Solver in Prolog
-Download sat_solver.pl. You will need to write a procedure 
-(that is, a combination of facts and rules which have the same name) 
-named isTrue which determines if a given Boolean formula is true. 
-This formula has a very similar AST as the one from the SAT solver you 
-implemented for Assignment 1, with mostly just changes to make the 
-representation a little more idiomatic to Prolog. However, there is one 
-key difference: instead of variables in the formula being represented by 
-atoms (or symbols for Racket), here we represent the variables using Prolog 
-variables (i.e., logical variables). This effectively allows us to “modify”
-the formula in-place as we learn information about it 
-(i.e., which variables need to be true or false.
-
-Relevant to the aforementioned representation of literals, 
-this means the following:
-
-If we have a positive literal, 
-the Prolog variable in the literal must be equal to the atom true. 
-That is, for a positive literal to be true, its variable must hold the 
-value true.
-
-If we have a negative literal, the Prolog variable in the literal must 
-be equal to the atom false. That is, for a negative literal to be true, 
-its variable must hold the value false, because it is negated.
-
-The comments in the file provide further details.
-
-(OPTIONAL BONUS WORTH +15%) Step 3: Answer Reflection Questions
-This may come as a bit of a surprise, but you implemented a 
-full tableau-based SAT solver in the previous step. However, 
-the code is (hopefully!) a lot simpler than the code you wrote for 
-Assignment 1.
-
-Download assign4_questions.txt. 
-There are questions in this file which ask you to reflect on your
-implementation, in particular with how it compares and contrasts with the 
-implementation you wrote for Assignment 1.
-
+Unification with the variables indicates that it was true. Using this as a
+basis, we are able to extrapolate that the recursive calls are being evaluated
+i.e. producing values. If we trace the process that occurs when we run each
+expression on the SAT Solver, we can explicitly see the unification and
+recursive process in action, at each step. A value is guaranteed to be returned,
+because there are only 2 options: Unify, or Don't Unify, i.e. true or false.
+This ideology applies not only to the given expression, but to all subsequent
+calls to the sub-expressions.
