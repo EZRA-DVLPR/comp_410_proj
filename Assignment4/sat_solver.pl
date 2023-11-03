@@ -29,6 +29,28 @@
 
 % ---Code---
 %
+% Types of Expressions
+
+% 1) Boolean Literal
+lit(_, positive).
+lit(_, negative).
+
+% 2) Logical And
+and(_,_).
+
+% 3) Logical Or
+or(_, _).
+
+% NOT A GENERATOR
+% List of all expressions: `Literal`, `and`, `or`
+expression(lit(_,Atom)) :-
+    lit(_, Atom).
+expression(and(expression(E1),expression(E2))) :-
+    expression(E1),
+    expression(E2).
+expression(or(expression(E1),expression(E2))) :-
+    expression(E1),
+    expression(E2).
 
 % isTrue
 %
@@ -51,6 +73,25 @@
 % My reference solution is 7 lines long; if you start needing a lot more
 % code than that, ask to make sure you're still on track.
 %
+
+
+%true iff Literal holds positive value <=> Value true
+isTrue(lit(_, positive)).
+
+% Note that if we comment this specific rule, 
+% it still operates the same uncommented
+%true iff Literal holds negative value <=> Value False
+isTrue(lit(_, negative)) :-
+    fail.
+
+%true iff LHS and RHS are both True.
+isTrue(and(LHS, RHS)) :-
+    isTrue(LHS),
+    isTrue(RHS).
+
+%true so long as one of: LHS, RHS is true.
+isTrue(or(LHS, RHS)) :-
+    isTrue(LHS) ; isTrue(RHS).
 
 % ---Begin Testing-Related Code---
 %

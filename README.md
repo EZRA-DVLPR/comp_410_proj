@@ -20,7 +20,7 @@ A collection of Exercises to get more familiar with Prolog. Specifically with re
 
 ## Assignment 4:
 
-...
+Implement a Boolean Evaluator and SAT solver in Prolog.
 
 ## Assignment 5:
 

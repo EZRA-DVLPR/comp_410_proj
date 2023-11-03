@@ -204,7 +204,6 @@ def solve(goals, literals):
             return None
         return solve(goals.tail, literals)
         
-
     else:
         #unexpected behavior
         print("unexpected behavior -- terminated")
