@@ -124,7 +124,38 @@ myLength([_|T], Length) :-
 %
 % Code expectation: ~12 lines
 
+%No more items to add
 myFlatten([], []).
+
+%Head is not a list and we append it to Flatten
+myFlatten([H|T], [H|Flatten]) :-
+    H \= [_|_],
+    H \= [_],
+    myFlatten(T, Flatten).
+
+%Given list has a List as the Head,
+%Head is a List with only 1 elt
+myFlatten([[H]|T], [H|Flatten]) :-
+    myFlatten(T, Flatten).
+
+%Given list has a List as the Head,
+%Head is a List with multiple elts,
+myFlatten([[H2|T2]|T], Flatten) :-
+    %First obtain the Flattened Tail
+    myFlatten(T, TailFlatten),
+
+    %Now we break apart the Head's List
+    %Start from the end, so do T2
+    myFlatten(T2, TailTwoFlatten),
+    
+    %append The flattened List of T2 to T
+    myAppend(TailTwoFlatten, TailFlatten, TFlatten),
+
+    %Flatten H2
+    myFlatten([H2], HeadTwoFlatten),
+
+    %append the flattened list of H2 to TFlatten
+    myAppend(HeadTwoFlatten, TFlatten, Flatten).
 
 % 7. TODO: Write a procedure named insertPosition that
 %    takes:
@@ -154,6 +185,23 @@ myFlatten([], []).
 % Code expectation: ~5 lines
 
 
+%This one is a little longer than expected because I wanted
+%to ensure that the bounds on Position were valid.
+
+%list is empty and add at head
+insertPosition([], Elt, 0, [Elt]).
+
+%list is nonempty and add at head
+insertPosition([H|T], Elt, 0, [Elt, H|T]).
+
+%list is nonempty and add at non-head position
+insertPosition([H|T], Elt, Position, [H|NewList]) :-
+    Position >= 0,
+    myLength([H|T], Len),
+    Position =< Len,
+    NewPosition is Position - 1,
+    insertPosition(T, Elt, NewPosition, NewList).
+
 % 8. TODO: Write a procedure named insertSorted that takes:
 %    1.) A sorted list of integers
 %    2.) An integer to insert
@@ -174,7 +222,17 @@ myFlatten([], []).
 %
 % Code expectation: ~6 lines
 
+%List is empty
+insertSorted([], Int, [Int]).
 
+%List is nonempty and Int =< H
+insertSorted([H|T], Int, [Int, H|T]) :-
+    Int =< H.
+
+%List is nonempty and Int > H
+insertSorted([H|T], Int, [H|InList]) :-
+    Int > H,
+    insertSorted(T, Int, InList).
 
 % 9. TODO: Write a procedure named insertionSort that
 %    takes:
@@ -199,3 +257,16 @@ myFlatten([], []).
 %
 % Code expectation: ~6 lines
 
+%empty list to sort
+insertionSort([], []).
+
+%only 1 elt in list to sort
+insertionSort([H], [H]).
+
+%nonempty list to sort of > 1 elt
+insertionSort([H|T], Sorted) :-
+    %sort T => TSorted
+    insertionSort(T, TSorted),
+    
+    %insert H into TSorted
+    insertSorted(TSorted, H, Sorted).

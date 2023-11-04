@@ -24,7 +24,7 @@ Implement a Boolean Evaluator and SAT solver in Prolog.
 
 ## Assignment 5:
 
-...
+List Operations in Prolog.
 
 ## Game:
 
