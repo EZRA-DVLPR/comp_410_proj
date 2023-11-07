@@ -26,6 +26,10 @@ Implement a Boolean Evaluator and SAT solver in Prolog.
 
 List Operations in Prolog.
 
+## Assignment 6:
+
+...
+
 ## Game:
 
 A Collection of a couple Prolog files to represent the game. The source file found from the website listed above. 
