@@ -28,7 +28,7 @@ List Operations in Prolog.
 
 ## Assignment 6:
 
-...
+Test Case Generation in Prolog.
 
 ## Game:
 
