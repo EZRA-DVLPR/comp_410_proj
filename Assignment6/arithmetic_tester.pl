@@ -79,45 +79,52 @@ expression(negate(expression(Expr))) :-
 % T = negate(number(0)) ;
 %
 
-%no more depth, implies number(0) is only tree possible
+%Given depth is 0
 makeTest(0, number(0)).
 
-%makeTest with some positive depth and we just call the previous depth with the
-%same AST
-makeTest(MaxDepth, AST) :-
-    MaxDepth > 0,
-    NewMaxDepth is MaxDepth - 1,
-    makeTest(NewMaxDepth, AST).
+%Recursively calls (Depth - 1) on MakeTest
+makeTest(Depth, AST) :-
+    Depth > 0,
+    NewDepth is Depth - 1,
+    makeTest(NewDepth, AST).
 
-%makeTest with some positive depth and use plus to conjoin two sides
-makeTest(MaxDepth, AST) :-
-    MaxDepth > 0,
-    NewMaxDepth is MaxDepth - 1,
-    makeTest(NewMaxDepth, LHS),
-    makeTest(NewMaxDepth, RHS),
-    AST = plus(LHS, RHS).
+%makes AST of the given Depth
+makeTest(Depth, AST) :-
+    Depth > 0,
+    makeTreeAtDepth(Depth, AST).
 
-%makeTest with some positive depth and use minus to conjoin two sides
-makeTest(MaxDepth, AST) :-
-    MaxDepth > 0,
-    NewMaxDepth is MaxDepth - 1,
-    makeTest(NewMaxDepth, LHS),
-    makeTest(NewMaxDepth, RHS),
+%makeTreeAtDepth(Depth, AST)
+%Depth indicates the depth of the AST generated
+
+%no more depth, implies number(0) is only tree possible
+makeTreeAtDepth(0, number(0)).
+
+%makeTreeAtDepth with some positive depth and use plus to conjoin two sides
+makeTreeAtDepth(Depth, AST) :-
+    Depth > 0,
+    NewDepth is Depth - 1,
+    makeTreeAtDepth(NewDepth, LHS),
+    makeTreeAtDepth(NewDepth, RHS),
+    AST = plus(LHS, RHS). 
+
+%makeTreeAtDepth with some positive depth and use minus to conjoin two sides
+makeTreeAtDepth(Depth, AST) :-
+    Depth > 0,
+    NewDepth is Depth - 1,
+    makeTreeAtDepth(NewDepth, LHS),
+    makeTreeAtDepth(NewDepth, RHS),
     AST = minus(LHS, RHS).
 
-%makeTest with some positive depth and use mult to conjoin two sides
-makeTest(MaxDepth, AST) :-
-    MaxDepth > 0,
-    NewMaxDepth is MaxDepth - 1,
-    makeTest(NewMaxDepth, LHS),
-    makeTest(NewMaxDepth, RHS),
+%makeTreeAtDepth with some positive depth and use mult to conjoin two sides
+makeTreeAtDepth(Depth, AST) :-
+    Depth > 0,
+    NewDepth is Depth - 1,
+    makeTreeAtDepth(NewDepth, LHS),
+    makeTreeAtDepth(NewDepth, RHS),
     AST = mult(LHS, RHS).
 
-%makeTest with some positive depth and use negate on current AST
-makeTest(MaxDepth, negate(AST)) :-
-    MaxDepth > 0,
-    NewMaxDepth is MaxDepth - 1,
-    makeTest(NewMaxDepth, AST).
+%makeTreeAtDepth with some positive depth and use negate on current AST
+makeTreeAtDepth(1, negate(number(0))).
 
 % TODO: Write a procedure named makeTestWithNums
 % that takes:
