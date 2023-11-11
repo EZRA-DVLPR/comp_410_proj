@@ -99,6 +99,33 @@ makeTest(Depth, AST) :-
 %no more depth, implies number(0) is only tree possible
 makeTreeAtDepth(0, number(0)).
 
+
+
+% type of left, op, type of right, result
+op(int, plus, int, int).
+op(bool, and, bool, bool).
+op(int, lt, int, bool).
+
+% typecheck - Exp, Type
+typecheck(number(_), int).
+typecheck(true, bool).
+typecheck(false, bool).
+typecheck(binop(Left, Op, Right), ResultType) :-
+    op(LeftType, Op, RightType, ResultType),
+    typecheck(Left, LeftType),
+    typecheck(Right, RightType).
+    
+
+
+%using model above, lets refactor to reduce code duplication
+genExpr(plus).
+genExpr(minus).
+genExpr(mult).
+
+
+makeTreeAtDepth(Depth, AST) :-
+    ???.
+
 %makeTreeAtDepth with some positive depth and use plus to conjoin two sides
 makeTreeAtDepth(Depth, AST) :-
     Depth > 0,
