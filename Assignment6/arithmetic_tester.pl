@@ -99,33 +99,24 @@ makeTest(Depth, AST) :-
 %no more depth, implies number(0) is only tree possible
 makeTreeAtDepth(0, number(0)).
 
-
-
-% type of left, op, type of right, result
-op(int, plus, int, int).
-op(bool, and, bool, bool).
-op(int, lt, int, bool).
-
-% typecheck - Exp, Type
-typecheck(number(_), int).
-typecheck(true, bool).
-typecheck(false, bool).
-typecheck(binop(Left, Op, Right), ResultType) :-
-    op(LeftType, Op, RightType, ResultType),
-    typecheck(Left, LeftType),
-    typecheck(Right, RightType).
-    
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %using model above, lets refactor to reduce code duplication
-genExpr(plus).
-genExpr(minus).
-genExpr(mult).
+
+
+%given AST, extract constituent sides
+binop(plus(L, R), L, R).
+binop(minus(L, R), L, R).
+binop(mult(L, R), L, R).
 
 
 makeTreeAtDepth(Depth, AST) :-
-    ???.
+    Depth > 0,
+    NewDepth is Depth - 1,
+    makeTreeAtDepth(NewDepth, LHS),
+    makeTreeAtDepth(NewDepth, RHS),
+    binop(AST, LHS, RHS).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %makeTreeAtDepth with some positive depth and use plus to conjoin two sides
 makeTreeAtDepth(Depth, AST) :-
     Depth > 0,
