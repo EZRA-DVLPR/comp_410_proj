@@ -1,8 +1,8 @@
 # This repo is dedicated to all coding assignments for my Comp 410 class of Fall 2023
 
-## The Assignment Solutions are my own Work.
+ The Assignment Solutions are my own Work.
 
-## Nani_Search code is given from http://www.amzi.com/AdventureInProlog/
+### Nani_Search code is given from http://www.amzi.com/AdventureInProlog/
 
 # Folder Structure:
 
@@ -32,8 +32,6 @@ Test Case Generation in Prolog.
 
 ## Game:
 
-A Collection of a couple Prolog files to represent the game. The source file found from the website listed above. 
-
-nani_search.pl is the code provided from the link above.
-
-mygame.pl is my own game based on the outline given.
+mygame.pl - my variation on naniSearch to work
+nani_search.pl - the in progress version of nani's Search
+naniSearchGiven.pl - the entire file given from the [link](http://www.amzi.com/AdventureInProlog/)
