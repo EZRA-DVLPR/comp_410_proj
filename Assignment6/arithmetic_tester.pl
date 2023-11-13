@@ -82,7 +82,12 @@ expression(negate(expression(Expr))) :-
 %Given depth is 0
 makeTest(0, number(0)).
 
-%Recursively calls (Depth - 1) on MakeTest
+%MakeTest will either:
+%       Recursively call with (Depth - 1)
+%                   OR
+%       make AST of given Depth
+
+%Recursively calls (Depth - 1) on makeTest
 makeTest(Depth, AST) :-
     Depth > 0,
     NewDepth is Depth - 1,
@@ -93,22 +98,20 @@ makeTest(Depth, AST) :-
     Depth > 0,
     makeTreeAtDepth(Depth, AST).
 
+%(Used in makeTreeAtDepth)
+%given AST, extract constituent sides
+binop(plus(L, R), L, R).
+binop(minus(L, R), L, R).
+binop(mult(L, R), L, R).
+
 %makeTreeAtDepth(Depth, AST)
 %Depth indicates the depth of the AST generated
 
 %no more depth, implies number(0) is only tree possible
 makeTreeAtDepth(0, number(0)).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%using model above, lets refactor to reduce code duplication
-
-
-%given AST, extract constituent sides
-binop(plus(L, R), L, R).
-binop(minus(L, R), L, R).
-binop(mult(L, R), L, R).
-
-
+%use binop to create new root expression in AST @ current Depth
+%while recursively generating LHS and RHS of AST
 makeTreeAtDepth(Depth, AST) :-
     Depth > 0,
     NewDepth is Depth - 1,
@@ -116,33 +119,11 @@ makeTreeAtDepth(Depth, AST) :-
     makeTreeAtDepth(NewDepth, RHS),
     binop(AST, LHS, RHS).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%makeTreeAtDepth with some positive depth and use plus to conjoin two sides
-makeTreeAtDepth(Depth, AST) :-
+%negate negates the current AST
+makeTreeAtDepth(Depth, negate(AST)) :-
     Depth > 0,
     NewDepth is Depth - 1,
-    makeTreeAtDepth(NewDepth, LHS),
-    makeTreeAtDepth(NewDepth, RHS),
-    AST = plus(LHS, RHS). 
-
-%makeTreeAtDepth with some positive depth and use minus to conjoin two sides
-makeTreeAtDepth(Depth, AST) :-
-    Depth > 0,
-    NewDepth is Depth - 1,
-    makeTreeAtDepth(NewDepth, LHS),
-    makeTreeAtDepth(NewDepth, RHS),
-    AST = minus(LHS, RHS).
-
-%makeTreeAtDepth with some positive depth and use mult to conjoin two sides
-makeTreeAtDepth(Depth, AST) :-
-    Depth > 0,
-    NewDepth is Depth - 1,
-    makeTreeAtDepth(NewDepth, LHS),
-    makeTreeAtDepth(NewDepth, RHS),
-    AST = mult(LHS, RHS).
-
-%makeTreeAtDepth with some positive depth and use negate on current AST
-makeTreeAtDepth(1, negate(number(0))).
+    makeTreeAtDepth(NewDepth, AST).
 
 % TODO: Write a procedure named makeTestWithNums
 % that takes:
@@ -183,6 +164,8 @@ makeTreeAtDepth(1, negate(number(0))).
 % T = mult(number(3), number(3)) ;
 % T = negate(number(2)) ;
 % T = negate(number(3)) .
+
+
 
 
 % ---Begin Testing-Related Code---
