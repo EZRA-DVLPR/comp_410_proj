@@ -79,6 +79,17 @@ expression(negate(expression(Expr))) :-
 % T = negate(number(0)) ;
 %
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                 %
+%            NOTE: makeTest(N, AST)               %
+%            produces duplicates when ran.        %
+%            This is because it recursively       %
+%            obtains the (same) LHS and RHS tree  %
+%                                                 %
+%            This is a feature, not a bug.        %
+%                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %Given depth is 0
 makeTest(0, number(0)).
 
@@ -115,15 +126,15 @@ makeTreeAtDepth(0, number(0)).
 makeTreeAtDepth(Depth, AST) :-
     Depth > 0,
     NewDepth is Depth - 1,
-    makeTreeAtDepth(NewDepth, LHS),
-    makeTreeAtDepth(NewDepth, RHS),
+    makeTest(NewDepth, LHS),
+    makeTest(NewDepth, RHS),
     binop(AST, LHS, RHS).
 
 %negate negates the current AST
 makeTreeAtDepth(Depth, negate(AST)) :-
     Depth > 0,
     NewDepth is Depth - 1,
-    makeTreeAtDepth(NewDepth, AST).
+    makeTest(NewDepth, AST).
 
 % TODO: Write a procedure named makeTestWithNums
 % that takes:
