@@ -158,8 +158,18 @@ makeTest(Depth, negate(AST)) :-
 % T = negate(number(2)) ;
 % T = negate(number(3)) .
 
+%generate number to use from list of nums
+
+getNum([H], number(H)).
+
+%how do we obtain the rest of the list's numbers recursively...
+
+%%Code here
+
+%%%
 
 
+%%Do similar thing here as makeTest except at each iteration call getNum.
 
 % ---Begin Testing-Related Code---
 
