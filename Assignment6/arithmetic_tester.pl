@@ -81,49 +81,31 @@ expression(negate(expression(Expr))) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                 %
-%            NOTE: makeTest(N, AST)               %
-%            produces duplicates when ran.        %
-%            This is because it recursively       %
-%            obtains the (same) LHS and RHS tree  %
+%          NOTE: makeTest(N, AST)                 %
+%          produces duplicates when ran.          %
+%          This is because it recursively         %
+%          obtains the (same) LHS and RHS tree    %
 %                                                 %
-%            This is a feature, not a bug.        %
+%          This is a feature, not a bug.          %
 %                                                 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%Given depth is 0
-makeTest(0, number(0)).
-
-%MakeTest will either:
-%       Recursively call with (Depth - 1)
-%                   OR
-%       make AST of given Depth
-
-%Recursively calls (Depth - 1) on makeTest
-makeTest(Depth, AST) :-
-    Depth > 0,
-    NewDepth is Depth - 1,
-    makeTest(NewDepth, AST).
-
-%makes AST of the given Depth
-makeTest(Depth, AST) :-
-    Depth > 0,
-    makeTreeAtDepth(Depth, AST).
-
-%(Used in makeTreeAtDepth)
+%(Used in makeTest)
 %given AST, extract constituent sides
 binop(plus(L, R), L, R).
 binop(minus(L, R), L, R).
 binop(mult(L, R), L, R).
 
-%makeTreeAtDepth(Depth, AST)
+%makeTest(Depth, AST)
 %Depth indicates the depth of the AST generated
 
-%no more depth, implies number(0) is only tree possible
-makeTreeAtDepth(0, number(0)).
+%At all non-negative depths, return AST with number(0).
+makeTest(Depth, number(0)) :-
+    Depth >= 0.
 
 %use binop to create new root expression in AST @ current Depth
 %while recursively generating LHS and RHS of AST
-makeTreeAtDepth(Depth, AST) :-
+makeTest(Depth, AST) :-
     Depth > 0,
     NewDepth is Depth - 1,
     makeTest(NewDepth, LHS),
@@ -131,7 +113,7 @@ makeTreeAtDepth(Depth, AST) :-
     binop(AST, LHS, RHS).
 
 %negate negates the current AST
-makeTreeAtDepth(Depth, negate(AST)) :-
+makeTest(Depth, negate(AST)) :-
     Depth > 0,
     NewDepth is Depth - 1,
     makeTest(NewDepth, AST).
