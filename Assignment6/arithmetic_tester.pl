@@ -90,21 +90,20 @@ expression(negate(expression(Expr))) :-
 %                                                 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%(Used in makeTest)
+%(Used in makeTest and makeTestWithNums)
 %given AST, extract constituent sides
 binop(plus(L, R), L, R).
 binop(minus(L, R), L, R).
 binop(mult(L, R), L, R).
 
 %makeTest(Depth, AST)
-%Depth indicates the depth of the AST generated
-
-%At all non-negative depths, return AST with number(0).
+%   Depth indicates the depth of the AST generated
+%   At all non-negative depths, return AST with number(0).
 makeTest(Depth, number(0)) :-
     Depth >= 0.
 
-%use binop to create new root expression in AST @ current Depth
-%while recursively generating LHS and RHS of AST
+%   use binop to create new root expression in AST @ current Depth
+%   while recursively generating LHS and RHS of AST
 makeTest(Depth, AST) :-
     Depth > 0,
     NewDepth is Depth - 1,
@@ -112,7 +111,7 @@ makeTest(Depth, AST) :-
     makeTest(NewDepth, RHS),
     binop(AST, LHS, RHS).
 
-%negate negates the current AST
+%   negate negates the current AST
 makeTest(Depth, negate(AST)) :-
     Depth > 0,
     NewDepth is Depth - 1,
@@ -158,18 +157,42 @@ makeTest(Depth, negate(AST)) :-
 % T = negate(number(2)) ;
 % T = negate(number(3)) .
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                 %
+%        NOTE: makeTestWithNums(N, AST)           %
+%        produces duplicates when ran.            %
+%        This is because it recursively           %
+%        obtains the (same) LHS and RHS tree      %
+%                                                 %
+%        This is a feature, not a bug.            %
+%                                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %generate number to use from list of nums
+%getNum(List, Number)
+getNum([H|_], number(H)).
+getNum([_|T], Number) :-
+    getNum(T, Number).
 
-getNum([H], number(H)).
+%makeTestWithNums(Depth, ListOfNums, AST)
+%   obtains a number from List that will be used for the given AST
+makeTestWithNums(Depth, List, AST) :-
+    Depth >= 0,
+    getNum(List, AST).
 
-%how do we obtain the rest of the list's numbers recursively...
+%   adds a binary operator to the AST @ root
+makeTestWithNums(Depth, List, AST) :-
+    Depth > 0,
+    NewDepth is Depth - 1,
+    makeTestWithNums(NewDepth, List, LHS),
+    makeTestWithNums(NewDepth, List, RHS),
+    binop(AST, LHS, RHS).
 
-%%Code here
-
-%%%
-
-
-%%Do similar thing here as makeTest except at each iteration call getNum.
+%   adds negation to AST @ root
+makeTestWithNums(Depth, List, negate(AST)) :-
+    Depth > 0,
+    NewDepth is Depth - 1,
+    makeTestWithNums(NewDepth, List, AST).
 
 % ---Begin Testing-Related Code---
 
