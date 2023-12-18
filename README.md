@@ -30,6 +30,10 @@ List Operations in Prolog.
 
 Test Case Generation in Prolog.
 
+## Assignment 7:
+
+Perfoming Logic Programming (Test Case Generation) in Python.
+
 ## Game:
 
 mygame.pl - my variation on naniSearch to work
